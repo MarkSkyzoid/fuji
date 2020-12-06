@@ -12,5 +12,7 @@
 // Api implementation here
 namespace fuji
 {
+    struct Context {
 
+    };
 }
