@@ -1,2 +1,2 @@
 # fuji
- fuji is a thing graphics abstraction used in sakura
+ fuji is a thin graphics abstraction used in [sakura](https://github.com/MarkSkyzoid/sakura)
