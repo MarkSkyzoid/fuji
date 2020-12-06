@@ -5,8 +5,14 @@
 
 namespace fuji {
 	// Structures
+	enum class API
+	{
+		Vulkan,
+	};
+
 	struct Backend
 	{
+		const API api = API::Vulkan;
 		// #TODO: Vulkan objects here!
 	};
 
