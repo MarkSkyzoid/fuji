@@ -37,10 +37,12 @@ namespace fuji {
 
 	struct ContextSettings
 	{
-		PlatformData platformData;
-
 		static constexpr uint32_t MAX_SWAPCHAIN_IMAGE_COUNT = 3;
-		uint32_t swapchainImageCount;
+		
+		PlatformData platformData;
+		uint32_t width;
+		uint32_t height;
+		uint32_t swapchainImageCount = MAX_SWAPCHAIN_IMAGE_COUNT;
 	};
 
 	struct Backend; // Implementation specific. Needs to be defined in the implementation translation unit.
@@ -48,11 +50,11 @@ namespace fuji {
 	struct Context
 	{
 		ContextSettings settings;
-		Backend& backend;
+		Backend* backend;
 	};
 
 	// Generic API
-	Context create_context(ContextSettings settings);
+	bool create_context(ContextSettings settings, Context& out_context);
 	void destroy_context(Context& context);
 
 	// Resource API

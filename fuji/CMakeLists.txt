@@ -3,8 +3,10 @@ project(fuji_main)
 file(GLOB fuji_SRC
     "*.hpp"
     "*.cpp"
-    "vulkan/*.hpp"
-    "vulkan/*.cpp"
+    "private/*.hpp"
+    "private/*.cpp"
+    "private/vulkan/*.hpp"
+    "private/vulkan/*.cpp"
 )
 
 add_library(fuji ${fuji_SRC})
