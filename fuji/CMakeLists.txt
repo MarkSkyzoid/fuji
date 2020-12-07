@@ -1,4 +1,4 @@
-project(fuji_main)
+project(fuji)
 
 file(GLOB fuji_SRC
     "*.hpp"
@@ -9,7 +9,7 @@ file(GLOB fuji_SRC
     "private/vulkan/*.cpp"
 )
 
-add_library(fuji ${fuji_SRC})
+add_library(fuji STATIC ${fuji_SRC})
 
 set(GraphicsAPIs
     Vulkan

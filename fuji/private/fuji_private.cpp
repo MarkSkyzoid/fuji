@@ -8,7 +8,7 @@ namespace fuji {
 		}
 
 #ifdef FUJI_WIN32
-		if (settings.platformData.hwnd == NULL) {
+		if (settings.platform_data.hwnd == NULL) {
 			return false;
 		}
 #endif // FUJI_WIN32

@@ -5,7 +5,6 @@
 #include <SDL.h>
 #include <SDL_syswm.h>
 
-
 int main(int argv, char** args)
 {
 	const uint32_t WIDTH = 1700;
@@ -26,9 +25,10 @@ int main(int argv, char** args)
 	fuji::ContextSettings ctx_settings {};
 	ctx_settings.width = WIDTH;
 	ctx_settings.height = HEIGHT;
-	ctx_settings.platformData.hinstance = sys_wm_info.info.win.hinstance;
-	ctx_settings.platformData.hwnd = sys_wm_info.info.win.window;
-	ctx_settings.swapchainImageCount = 2;
+	ctx_settings.platform_data.hinstance = sys_wm_info.info.win.hinstance;
+	ctx_settings.platform_data.hwnd = sys_wm_info.info.win.window;
+	ctx_settings.swapchain_image_count = 2;
+	ctx_settings.enable_validation = true;
 	fuji::Context fuji_context;
 	if (!fuji::create_context(ctx_settings, fuji_context)) {
 		return 1;
