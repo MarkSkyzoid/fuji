@@ -52,7 +52,7 @@ namespace fuji {
 	struct Context
 	{
 		ContextSettings settings;
-		Backend* backend;
+		Backend* backend = nullptr;
 	};
 
 	// Generic API

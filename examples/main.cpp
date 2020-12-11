@@ -18,7 +18,7 @@ int main(int argv, char** args)
 	if (window == nullptr) {
 		return 1;
 	}
-	
+
 	SDL_SysWMinfo sys_wm_info;
 	SDL_GetWindowWMInfo(window, &sys_wm_info);
 
@@ -28,7 +28,12 @@ int main(int argv, char** args)
 	ctx_settings.platform_data.hinstance = sys_wm_info.info.win.hinstance;
 	ctx_settings.platform_data.hwnd = sys_wm_info.info.win.window;
 	ctx_settings.swapchain_image_count = 2;
+#if defined(NDEBUG)
+	ctx_settings.enable_validation = false;
+#else // NDEBUG
 	ctx_settings.enable_validation = true;
+#endif // NDEBUG
+
 	fuji::Context fuji_context;
 	if (!fuji::create_context(ctx_settings, fuji_context)) {
 		return 1;
@@ -46,12 +51,12 @@ int main(int argv, char** args)
 		}
 
 		// #TODO
-		//draw();
+		// draw();
 	}
 
 	fuji::destroy_context(fuji_context);
 
 	SDL_DestroyWindow(window);
-	
+
 	return 0;
 }
