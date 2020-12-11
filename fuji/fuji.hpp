@@ -20,12 +20,11 @@
 #include <Windows.h>
 #endif
 
-#include <stdint.h>
+#include <cassert>
+#include <cstdint>
 
 // Api implementation here
 namespace fuji {
-	// Constants
-	constexpr uint32_t MAX_SWAPCHAIN_IMAGE_COUNT = 3;
 
 	// Structures
 	enum class Format : uint32_t
@@ -68,10 +67,21 @@ namespace fuji {
 		S8_UINT,
 		D16_UNORM_S8_UINT,
 		D24_UNORM_S8_UINT,
-		D32_UNORM_S8_UINT,
+		D32_FLOAT_S8_UINT,
 
 		Count,
 		Invalid = Count,
+	};
+
+	struct ClearValueColor
+	{
+		float r, g, b, a;
+	};
+
+	struct ClearValueDepthStencil
+	{
+		float depth;
+		uint32_t stencil;
 	};
 
 	struct PlatformData
@@ -86,7 +96,10 @@ namespace fuji {
 
 	struct SwapchainSettings
 	{
-		uint32_t image_count = MAX_SWAPCHAIN_IMAGE_COUNT;
+		uint32_t image_count; // This gets set internally and can be queried
+		Format color_format = Format::Undefined;
+		ClearValueColor color_clear_value;
+		// #TODO: Depth stencil buffer
 	};
 
 	struct ContextSettings
