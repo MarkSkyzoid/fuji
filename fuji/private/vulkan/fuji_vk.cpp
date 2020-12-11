@@ -55,8 +55,8 @@ namespace fuji {
 		out_context.backend = new Backend {};
 		Backend& backend = *out_context.backend;
 
-		settings.swapchain_image_count =
-		std::min(settings.swapchain_image_count, ContextSettings::MAX_SWAPCHAIN_IMAGE_COUNT);
+		settings.swapchain_settings.image_count =
+		std::min(settings.swapchain_settings.image_count, MAX_SWAPCHAIN_IMAGE_COUNT);
 
 		// Write final settings into the context
 		out_context.settings = settings;

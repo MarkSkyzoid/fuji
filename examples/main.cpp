@@ -27,7 +27,7 @@ int main(int argv, char** args)
 	ctx_settings.height = HEIGHT;
 	ctx_settings.platform_data.hinstance = sys_wm_info.info.win.hinstance;
 	ctx_settings.platform_data.hwnd = sys_wm_info.info.win.window;
-	ctx_settings.swapchain_image_count = 2;
+	ctx_settings.swapchain_settings.image_count = 2;
 #if defined(NDEBUG)
 	ctx_settings.enable_validation = false;
 #else // NDEBUG
