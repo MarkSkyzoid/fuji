@@ -20,6 +20,7 @@ int main(int argv, char** args)
 	}
 
 	SDL_SysWMinfo sys_wm_info;
+	SDL_VERSION(&sys_wm_info.version); // Call this before calling SDL_GetWindowWMInfo
 	SDL_GetWindowWMInfo(window, &sys_wm_info);
 
 	fuji::ContextSettings ctx_settings {};

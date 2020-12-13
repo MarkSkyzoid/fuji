@@ -234,8 +234,8 @@ namespace fuji {
 		// init instance
 		vkb::InstanceBuilder instance_builder_vkb;
 
-		auto maybe_instance_vkb = instance_builder_vkb.set_app_name(settings.app_name)
-										  .request_validation_layers(settings.enable_validation)
+		auto maybe_instance_vkb = instance_builder_vkb.set_app_name(out_context.settings.app_name)
+										  .request_validation_layers(out_context.settings.enable_validation)
 										  .require_api_version(1, 1, 0)
 										  .use_default_debug_messenger()
 										  .build();
@@ -256,8 +256,8 @@ namespace fuji {
 		surface_create_info.sType = VK_STRUCTURE_TYPE_WIN32_SURFACE_CREATE_INFO_KHR;
 		surface_create_info.pNext = NULL;
 		surface_create_info.flags = 0;
-		surface_create_info.hinstance = settings.platform_data.hinstance;
-		surface_create_info.hwnd = settings.platform_data.hwnd;
+		surface_create_info.hinstance = out_context.settings.platform_data.hinstance;
+		surface_create_info.hwnd = out_context.settings.platform_data.hwnd;
 		VkResult surface_create_result =
 		vkCreateWin32SurfaceKHR(backend.instance, &surface_create_info, nullptr, &backend.surface);
 		assert(VK_SUCCESS == surface_create_result);

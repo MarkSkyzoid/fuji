@@ -21,7 +21,7 @@ list(FIND GraphicsAPIs ${GraphicsAPI} index)
 if(index EQUAL 0) # Vulkan
     add_compile_definitions(FUJI_API=FUJI_API_VULKAN)
     find_package(Vulkan REQUIRED)
-    target_link_libraries(fuji vk-bootstrap VulkanMemoryAllocator)
+    target_link_libraries(fuji Vulkan::Vulkan vk-bootstrap VulkanMemoryAllocator)
 elseif(index EQUAL 1)
     add_compile_definitions(FUJI_API=FUJI_API_DX12)
 else()
