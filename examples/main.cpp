@@ -30,7 +30,7 @@ int main(int argv, char** args)
 	ctx_settings.platform_data.hwnd = sys_wm_info.info.win.window;
 #if defined(NDEBUG)
 	ctx_settings.enable_validation = false;
-#else // NDEBUG
+#else  // NDEBUG
 	ctx_settings.enable_validation = true;
 #endif // NDEBUG
 
