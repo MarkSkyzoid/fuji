@@ -114,10 +114,22 @@ namespace fuji {
 
 	struct Backend; // Implementation specific. Needs to be defined in the implementation translation unit.
 
+	// Important objects
 	struct Context
 	{
 		ContextSettings settings;
 		Backend* backend = nullptr;
+	};
+
+	enum class QueueType : uint8_t
+	{
+		Graphics = 0,
+		Present,
+		Transfer,
+		Compute,
+
+		Count,
+		Invalid = Count,
 	};
 
 	// Generic API

@@ -35,6 +35,12 @@ namespace fuji {
 		std::vector<VkImageView> image_views;
 	};
 
+	struct QueueVK
+	{
+		uint32_t queue_family_index = -1;
+		VkQueue queue;
+	};
+
 	struct Backend
 	{
 		const API api = API::Vulkan;
@@ -45,6 +51,8 @@ namespace fuji {
 		VkSurfaceKHR surface;
 
 		SwapchainVK swapchain;
+
+		QueueVK queues[to_underlying_type(QueueType::Count)];
 
 		// #TODO: Make it compulsory to have validation enabled only if a macro is defined
 		VkDebugUtilsMessengerEXT debug_messenger; // Only present if validation is enabled
@@ -208,7 +216,7 @@ namespace fuji {
 
 		vkDestroySwapchainKHR(backend.device, backend.swapchain.swapchain, nullptr);
 
-		for (int i = 0; i < swapchain_settings.image_count; i++) {
+		for (uint32_t i = 0; i < swapchain_settings.image_count; i++) {
 			vkDestroyImageView(backend.device, backend.swapchain.image_views[i], nullptr);
 		}
 	}
@@ -288,6 +296,28 @@ namespace fuji {
 		vkb::Device device_vkb = maybe_device_vkb.value();
 		backend.device = device_vkb.device;
 
+		// Queues
+		backend.queues[to_underlying_type(QueueType::Graphics)].queue =
+		device_vkb.get_queue(vkb::QueueType::graphics).value();
+		backend.queues[to_underlying_type(QueueType::Graphics)].queue_family_index =
+		device_vkb.get_queue_index(vkb::QueueType::graphics).value();
+
+		backend.queues[to_underlying_type(QueueType::Present)].queue =
+		device_vkb.get_queue(vkb::QueueType::present).value();
+		backend.queues[to_underlying_type(QueueType::Present)].queue_family_index =
+		device_vkb.get_queue_index(vkb::QueueType::present).value();
+
+		backend.queues[to_underlying_type(QueueType::Transfer)].queue =
+		device_vkb.get_queue(vkb::QueueType::transfer).value();
+		backend.queues[to_underlying_type(QueueType::Transfer)].queue_family_index =
+		device_vkb.get_queue_index(vkb::QueueType::transfer).value();
+
+		backend.queues[to_underlying_type(QueueType::Compute)].queue =
+		device_vkb.get_queue(vkb::QueueType::compute).value();
+		backend.queues[to_underlying_type(QueueType::Compute)].queue_family_index =
+		device_vkb.get_queue_index(vkb::QueueType::compute).value();
+
+		// Swapchain
 		if (!create_swapchain(backend, out_context.settings, out_context.settings.swapchain_settings,
 									 backend.swapchain)) {
 			return false;
