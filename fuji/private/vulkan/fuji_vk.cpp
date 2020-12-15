@@ -162,7 +162,7 @@ namespace fuji {
 		return result;
 	}
 
-	bool create_swapchain(const Backend& backend,
+	static bool create_swapchain(const Backend& backend,
 								 const ContextSettings& context_settings,
 								 SwapchainSettings& in_out_swapchain_settings,
 								 SwapchainVK& out_swapchain)
@@ -209,7 +209,7 @@ namespace fuji {
 		return true;
 	}
 
-	void destroy_swapchain(Context& context)
+	static void destroy_swapchain(Context& context)
 	{
 		const Backend& backend = *context.backend;
 		const SwapchainSettings& swapchain_settings = context.settings.swapchain_settings;

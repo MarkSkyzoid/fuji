@@ -96,7 +96,10 @@ namespace fuji {
 
 	struct SwapchainSettings
 	{
-		uint32_t image_count; // This gets set internally and can be queried
+		// NOTE: This is set internally by fuji::create_context
+		// It can later be queried again.
+		uint32_t image_count = 0;
+		// If this is set to Format::Undefined then pick up a standard format automatically
 		Format color_format = Format::Undefined;
 		ClearValueColor color_clear_value;
 		// #TODO: Depth stencil buffer
