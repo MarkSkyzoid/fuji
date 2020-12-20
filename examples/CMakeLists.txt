@@ -33,6 +33,7 @@ file(GLOB examples_SRC
 )
 
 add_executable(examples ${examples_SRC})
+set_property(TARGET examples PROPERTY CXX_STANDARD 17)
 
 target_link_libraries(examples fuji)
 

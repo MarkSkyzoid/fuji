@@ -29,7 +29,7 @@ namespace fuji {
 
 	struct SwapchainVK
 	{
-		VkSwapchainKHR swapchain;
+		VkSwapchainKHR swapchain = VK_NULL_HANDLE;
 		VkFormat format;
 		std::vector<VkImage> images;
 		std::vector<VkImageView> image_views;
@@ -38,17 +38,17 @@ namespace fuji {
 	struct QueueVK
 	{
 		uint32_t queue_family_index = -1;
-		VkQueue queue;
+		VkQueue queue = VK_NULL_HANDLE;
 	};
 
 	struct Backend
 	{
 		const API api = API::Vulkan;
 
-		VkInstance instance;
-		VkPhysicalDevice physical_device;
-		VkDevice device;
-		VkSurfaceKHR surface;
+		VkInstance instance = VK_NULL_HANDLE;
+		VkPhysicalDevice physical_device = VK_NULL_HANDLE;
+		VkDevice device = VK_NULL_HANDLE;
+		VkSurfaceKHR surface = VK_NULL_HANDLE;
 
 		SwapchainVK swapchain;
 
@@ -162,10 +162,35 @@ namespace fuji {
 		return result;
 	}
 
+	Backend& get_backend(Context& context)
+	{
+		assert(context.backend != nullptr);
+
+		Backend& backend = *context.backend;
+		assert(backend.api == API::Vulkan);
+
+		return backend;
+	}
+
+	const Backend& get_backend(const Context& context)
+	{
+		return get_backend(const_cast<Context&>(context));
+	}
+
+	QueueVK& get_queue(Backend& backend, QueueType queue_type)
+	{
+		return backend.queues[to_underlying_type(queue_type)];
+	}
+
+	const QueueVK& get_queue(const Backend& backend, QueueType queue_type)
+	{
+		return get_queue(const_cast<Backend&>(backend), queue_type);
+	}
+
 	static bool create_swapchain(const Backend& backend,
-								 const ContextSettings& context_settings,
-								 SwapchainSettings& in_out_swapchain_settings,
-								 SwapchainVK& out_swapchain)
+										  const ContextSettings& context_settings,
+										  SwapchainSettings& in_out_swapchain_settings,
+										  SwapchainVK& out_swapchain)
 	{
 		out_swapchain = {};
 
@@ -328,10 +353,7 @@ namespace fuji {
 
 	void destroy_context(Context& context)
 	{
-		assert(context.backend != nullptr);
-
-		Backend& backend = *context.backend;
-		assert(backend.api == API::Vulkan);
+		Backend& backend = get_backend(context);
 
 		// Order is important (opposite of creation order)
 		destroy_swapchain(context);
@@ -346,6 +368,45 @@ namespace fuji {
 		// Delete backend and reset to nullptr
 		delete context.backend;
 		context.backend = nullptr;
+	}
+
+	// Resource API
+	CommandPoolHandle create_command_pool(Context& context, QueueType queue_type, bool transient)
+	{
+		Backend& backend = get_backend(context);
+
+		const QueueVK& queue = get_queue(backend, queue_type);
+
+		VkCommandPoolCreateInfo command_pool_create_info = {};
+		command_pool_create_info.sType = VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO;
+		command_pool_create_info.pNext = nullptr;
+
+		command_pool_create_info.queueFamilyIndex = queue.queue_family_index;
+		command_pool_create_info.flags =
+		VK_COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT; // Allow resetting of all commands allocated from the pool in one go (by resetting the pool)
+		if (transient) {
+			command_pool_create_info.flags |=
+			VK_COMMAND_POOL_CREATE_TRANSIENT_BIT; // Internal implementation might use it for optimizing resource allocation for short-lived commands
+		}
+
+		CommandPoolHandle command_pool_handle;
+
+		VkCommandPool command_pool;
+		if (vkCreateCommandPool(backend.device, &command_pool_create_info, nullptr, &command_pool) == VK_SUCCESS) {
+			command_pool_handle.value = reinterpret_cast<uint64_t>(command_pool);
+		}
+
+		return command_pool_handle;
+	}
+
+	void destroy_command_pool(Context& context, CommandPoolHandle& command_pool_handle)
+	{
+		assert(command_pool_handle.is_valid());
+		Backend& backend = get_backend(context);
+
+		VkCommandPool command_pool = reinterpret_cast<VkCommandPool>(command_pool_handle.value);
+
+		vkDestroyCommandPool(backend.device, command_pool, nullptr);
 	}
 } // namespace fuji
 

@@ -135,11 +135,36 @@ namespace fuji {
 		Invalid = Count,
 	};
 
+	// Resource Handles
+	enum class ResourceType : uint8_t
+	{
+		CommandPool = 0,
+		Command,
+
+		Count,
+		Invalid = Count
+	};
+
+	// Handles are invalid when created
+	template<ResourceType Tag> struct Handle
+	{
+		static constexpr uint64_t INVALID_VALUE = static_cast<uint64_t>(-1);
+		uint64_t value = INVALID_VALUE;
+
+		bool is_valid() const { return value != INVALID_VALUE; }
+		void make_invalid() { value = INVALID_VALUE; }
+	};
+
+	using CommandPoolHandle = Handle<ResourceType::CommandPool>;
+	using CommandHandle = Handle<ResourceType::Command>;
+
 	// Generic API
 	bool create_context(ContextSettings settings, Context& out_context);
 	void destroy_context(Context& context);
 
 	// Resource API
+	CommandPoolHandle create_command_pool(Context& context, QueueType queue_type, bool transient);
+	void destroy_command_pool(Context& context, CommandPoolHandle& command_pool_handle);
 
 	// Command API
 

@@ -39,6 +39,13 @@ int main(int argv, char** args)
 		return 1;
 	}
 
+	fuji::CommandPoolHandle gfx_command_pool =
+	fuji::create_command_pool(fuji_context, fuji::QueueType::Graphics, true);
+	
+	if (!gfx_command_pool.is_valid()) {
+		return 1;
+	}
+
 	SDL_Event sdl_event;
 	bool do_quit = false;
 	// main loop
@@ -53,6 +60,8 @@ int main(int argv, char** args)
 		// #TODO
 		// draw();
 	}
+
+	fuji::destroy_command_pool(fuji_context, gfx_command_pool);
 
 	fuji::destroy_context(fuji_context);
 

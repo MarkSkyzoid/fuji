@@ -26,6 +26,7 @@ file(GLOB fuji_SRC RELATIVE "${CMAKE_CURRENT_SOURCE_DIR}" ${fuji_own_SRC})
 assign_source_group(${fuji_SRC})
 
 add_library(fuji STATIC ${fuji_SRC})
+set_property(TARGET fuji PROPERTY CXX_STANDARD 17)
 
 set(GraphicsAPIs
     Vulkan
